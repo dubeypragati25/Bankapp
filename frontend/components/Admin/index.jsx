@@ -1,11 +1,26 @@
 import Adminlayout from "../Layout/Adminlayout";
-const Dashboard = () =>{
+import Dashboard from "../Shared/Dashboard";
+import useSWR from "swr";
+import {fetchData} from "../../modules/modules";
+
+const AdminDashboard = () =>{
+
+    //get userInfo from session storage
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+    const {data: trData, error: trError} = useSWR(
+        `/api/transaction/summary?branch=${userInfo.branch}`,
+        fetchData,
+        {
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+            refreshInterval: 1200000,
+        }
+    )
+    
     return (
         <Adminlayout>
-            <h1 className="text-5xl font-bold text-red-500">
-                Welcome to admin dashboard
-            </h1>
+            <Dashboard data={trData && trData}/>
         </Adminlayout>
     )
 }
-export default Dashboard;
+export default AdminDashboard;

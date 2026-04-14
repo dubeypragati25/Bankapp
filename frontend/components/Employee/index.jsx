@@ -1,11 +1,25 @@
 import Employeelayout from "../Layout/Employeelayout";
+import Dashboard from "../Shared/Dashboard";
+import useSWR from "swr";
+import {fetchData} from "../../modules/modules";
 
 const EmployeeDashboard = () =>{
+
+    //get userInfo from session storage
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+    const {data: trData, error: trError} = useSWR(
+        `/api/transaction/summary?branch=${userInfo.branch}`,
+        fetchData,
+        {
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+            refreshInterval: 1200000,
+        } 
+    )
+
     return (
         <Employeelayout>
-            <h1 className="text-5xl font-bold text-red-500">
-                Welcome to employee dashboard
-            </h1>
+            <Dashboard data = {trData && trData}/>
         </Employeelayout>
     )
 }

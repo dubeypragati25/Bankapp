@@ -49,8 +49,12 @@ const NewAccount = () =>{
             try{
                 const httpReq = http()
                 const {data} = await httpReq.get("/api/customers");
-                setAllCustomer(data?.data);
-                setFinalCustomer(data?.data);
+                setAllCustomer(
+                    data?.data?.filter((item)=>item.branch === userInfo.branch)
+                );
+                setFinalCustomer(
+                    data?.data?.filter((item)=>item.branch === userInfo.branch)
+                );
             }catch(err) {
                 messageApi.error("Unable to fetch data !")
             }
@@ -509,6 +513,7 @@ setLoading(false);
                 }
                 >
                     <Table
+                    rowKey="_id"
                     columns={columns}
                     dataSource={allCustomer}
                     scroll={{x: "max-content"}}

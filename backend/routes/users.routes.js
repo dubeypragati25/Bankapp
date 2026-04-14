@@ -2,34 +2,22 @@ const express = require("express");
 const router = express.Router();
 const controller = require("../controller/controller");
 const usersSchema = require("../model/users.model");
+const { verifyToken, isAdmin } = require("../middlewares/middleware");
 
-const multer = require("multer");
 
-// storage config (optional but better)
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
+router.get("/",verifyToken, isAdmin, (req, res) => {
+  controller.getData(req, res, usersSchema); 
 });
 
-const upload = multer({ storage: storage });
-
-router.get("/",(req, res) => {
-  controller.getData(req, res, usersSchema);
-});
-
-router.post("/", upload.single("xyz"), (req, res) => {
+router.post("/", verifyToken, isAdmin, (req, res) => {
   controller.createData(req, res, usersSchema);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", verifyToken, isAdmin, (req, res) => {
   controller.updateData(req, res, usersSchema);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", verifyToken, isAdmin, (req, res) => {
   controller.deleteData(req, res, usersSchema);
 });
 

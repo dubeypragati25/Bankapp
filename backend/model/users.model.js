@@ -27,5 +27,6 @@ usersSchema.pre("save", async function(next) {
     if(!user.isModified("password")) return next();
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
+    console.log(user.password)
 })
 module.exports = mongo.model("user", usersSchema);
