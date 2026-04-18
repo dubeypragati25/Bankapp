@@ -1,5 +1,6 @@
 import Customerlayout from "../../Layout/Customerlayout" 
 import TransactionTable from "../../Shared/TransactionTable"
+import NewTransaction from "../../Shared/NewTransaction"
 
 const CustomerTransactions = () =>{
 

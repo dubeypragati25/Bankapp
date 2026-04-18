@@ -23,6 +23,7 @@ const Guard = ({endpoint,role}) =>{
             try{
                 const httpReq = http(token)
                 const {data} = await httpReq.get(endpoint)
+                //console.log(data?.data);
                 const user = data?.data?.userType
                 sessionStorage.setItem("userInfo",JSON.stringify(data?.data))
                 setUserType(user)

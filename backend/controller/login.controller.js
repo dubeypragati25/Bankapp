@@ -11,6 +11,7 @@ const loginFunc = async (req,res,schema) => {
             email 
         }
         const dbRes = await dbService.findOneRecord(query,schema)
+        console.log(dbRes)
         if(dbRes) {
             const isMatch = await bcrypt.compare(password, dbRes.password)
             if(isMatch) {

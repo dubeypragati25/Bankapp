@@ -29,7 +29,7 @@ const verifyToken = (req,res,next) =>{
 }
 
 const isAdmin = (req,res, next) => {
-    if(req.user?.userType === "admin") {
+    if(req.user?.userType === "admin"|| req.user?.userType === "employee") {
         return next()
     }
     return res.status(403).json({ message : "Access denied"})

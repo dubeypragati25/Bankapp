@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Table, Card, DatePicker, Button, Form, Input } from "antd";
-import { formatDate, http, printBankTransactions, trimData, downloadTransaction  } from "../../../modules/modules";
+import { formatDate, http, printBankTransactions, trimData, downloadTransaction } from "../../../modules/modules";
 import { PrinterOutlined, DownloadOutlined } from "@ant-design/icons";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 
-const {Item} = Form
+const { Item } = Form
 
-const TransactionTable = ({ query = {} }) => {
+const TransactionTable = ({ query = {}, refresh }) => {
   const token = cookies.get("authToken")
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -16,7 +16,7 @@ const TransactionTable = ({ query = {} }) => {
   const [branch, setBranch] = useState(query.branch || "");
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 10
+    pageSize: 5
   });
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +24,7 @@ const TransactionTable = ({ query = {} }) => {
     setLoading(true);
     const searchParams = new URLSearchParams({
       page: params.current || 1,
-      pageSize: params.pageSize || 10,
+      pageSize: params.pageSize || 5,
     });
 
     // Add filters from state OR initial query
@@ -48,105 +48,105 @@ const TransactionTable = ({ query = {} }) => {
 
   useEffect(() => {
     fetchTransactions(pagination);
-  }, [query]); // Re-run when new props come in
+  }, [query,refresh]); // Re-run when new props come in
 
   const handleTableChange = (pagination) => {
     fetchTransactions(pagination);
   };
 
   const columns = [
-    { 
-        title: "Account No", 
-        dataIndex: "accountNo", 
-        key: "accountNo" 
+    {
+      title: "Account No",
+      dataIndex: "accountNo",
+      key: "accountNo"
     },
-    { 
-        title: "Branch", 
-        dataIndex: "branch", 
-        key: "branch" 
+    {
+      title: "Branch",
+      dataIndex: "branch",
+      key: "branch"
     },
-    { 
-        title: "Type", 
-        dataIndex: "transactionType", 
-        key: "transactionType" 
+    {
+      title: "Type",
+      dataIndex: "transactionType",
+      key: "transactionType"
     },
-    { 
-        title: "Amount", 
-        dataIndex: "transactionAmount", 
-        key: "transactionAmount" 
+    {
+      title: "Amount",
+      dataIndex: "transactionAmount",
+      key: "transactionAmount"
     },
-    { 
-      title: "Date", 
-      dataIndex: "createdAt", 
+    {
+      title: "Date",
+      dataIndex: "createdAt",
       key: "createdAt",
-      render : (d) => formatDate(d) 
+      render: (d) => formatDate(d)
     },
   ];
 
-  const onFinish = async (values) =>{
-    try{
+  const onFinish = async (values) => {
+    try {
       values.branch = query.branch
-      if(query.isCustomer) values.accountNo = query.accountNo
+      if (query.isCustomer) values.accountNo = query.accountNo
       const httpReq = http()
       let obj = trimData(values)
-      const {data} = await httpReq.post(`/api/transaction/filter`,obj)
+      const { data } = await httpReq.post(`/api/transaction/filter`, obj)
       setData(data)
-    }catch(err) {
+    } catch (err) {
       console.log(err)
     }
-    
+
   }
   return (
     <div className="p-4">
       <Card className="!mb-2">
         <div className="flex justify-between items-center">
           <Form className="flex gap-3" onFinish={onFinish}>
-             <Item
-             label="From"
-             name="fromDate"
-             rules={[{required:true}]}
-             >
-              <DatePicker/>
-             </Item>
-             <Item
-             label="To"
-             name="toDate"
-             rules ={[{required:true}]}
-             >
-              <DatePicker/>
-             </Item>
-             {!query.isCustomer && 
-             <Item
-             label="Account"
-             name="accountNo">
-              <Input placeholder="Account No"/>
-             </Item>
-              }
-             <Item>
-              <Button
-            type = "text"
-            htmlType="submit"
-            className = "!font-semibold !text-white !bg-blue-500"
+            <Item
+              label="From"
+              name="fromDate"
+              rules={[{ required: true }]}
             >
-              Fetch Transactions
-            </Button>
-             </Item>
+              <DatePicker />
+            </Item>
+            <Item
+              label="To"
+              name="toDate"
+              rules={[{ required: true }]}
+            >
+              <DatePicker />
+            </Item>
+            {!query.isCustomer &&
+              <Item
+                label="Account"
+                name="accountNo">
+                <Input placeholder="Account No" />
+              </Item>
+            }
+            <Item>
+              <Button
+                type="text"
+                htmlType="submit"
+                className="!font-semibold !text-white !bg-blue-500"
+              >
+                Fetch Transactions
+              </Button>
+            </Item>
           </Form>
           <div className="flex gap-3">
             <Button
-          type = "text"
-          className = "!font-semibold !text-white !bg-blue-500"
-          shape = "circle"
-          icon = {<DownloadOutlined/>}
-          onClick = {() =>downloadTransaction(data)}
-          />
-          <Button
-          type = "text"
-          className = "!font-semibold !text-white !bg-blue-500"
-          shape = "circle"
-          icon = {<PrinterOutlined/>}
-          onClick = {() =>printBankTransactions(data)}
-          />
+              type="text"
+              className="!font-semibold !text-white !bg-blue-500"
+              shape="circle"
+              icon={<DownloadOutlined />}
+              onClick={() => downloadTransaction(data)}
+            />
+            <Button
+              type="text"
+              className="!font-semibold !text-white !bg-blue-500"
+              shape="circle"
+              icon={<PrinterOutlined />}
+              onClick={() => printBankTransactions(data)}
+            />
           </div>
         </div>
       </Card>
@@ -167,4 +167,3 @@ const TransactionTable = ({ query = {} }) => {
 };
 
 export default TransactionTable;
- 

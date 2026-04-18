@@ -27,7 +27,7 @@ const Adminlayout = ({children}) => {
   //logout coding
   const logoutFunc = () =>{   
     sessionStorage.removeItem("userInfo")
-    cookies.remove("authToken")
+    cookies.remove("authToken",{ path: "/" })
     navigate("/")
   }
     const items=[

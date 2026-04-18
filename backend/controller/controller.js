@@ -120,6 +120,23 @@ const findByAccountNo = async(req,res,schema) =>{
   }
 }
 
+const findByEmail = async(req,res,schema) =>{
+
+  try{
+    const query = req.query;
+    
+    const dbRes = await dbService.findOneRecord(query,schema)
+    return res.status(200).json({
+      message : "Record found !",
+      data : dbRes
+    })
+  }catch(err) {
+    return res.status(500).json({
+      message : "Internal Server Error !"
+    })
+  }
+}
+
 const getTransactionSummary= async (req,res,schema) =>{
   const {branch, accountNo} = req.query
   let matchStage = {}
@@ -221,5 +238,6 @@ module.exports = {
   findByAccountNo,
   getTransactionSummary,
   getPaginatedTransactions,
-  filterData
+  filterData,
+  findByEmail
 };
