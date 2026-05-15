@@ -13,7 +13,13 @@ const loginFunc = async (req,res,schema) => {
         const dbRes = await dbService.findOneRecord(query,schema)
         console.log(dbRes)
         if(dbRes) {
-            const isMatch = await bcrypt.compare(password, dbRes.password)
+            console.log("Entered password:", password);
+    console.log("Stored hash:", dbRes.password);
+
+    const isMatch = await bcrypt.compare(password, dbRes.password)
+
+    console.log("Password match:", isMatch);
+
             if(isMatch) {
                 if(dbRes.isActive) {
                     delete dbRes._doc.password
