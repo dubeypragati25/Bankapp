@@ -29,7 +29,10 @@ app.set('view engine', 'jade');
 
 //app.use(cors({origin:"*"}))
 app.use(cors({
-  origin: "hhttps://bankapp-6x2.pages.dev", // frontend URL
+  origin: [
+    "http://localhost:5173",
+    "https://bankapp-6x2.pages.dev"
+  ],
   credentials: true
 }));
 app.use(logger('dev'));
