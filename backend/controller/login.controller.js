@@ -8,6 +8,7 @@ const axios = require("axios");
 const loginFunc = async (req,res,schema) => {
     try{
         const {email,password,turnstileToken} = req.body;
+        console.log("TURNSTILE TOKEN:", turnstileToken);
         // Verify Cloudflare Turnstile
 
 const secretKey = "0x4AAAAAADQcHQ3fNaWnI9266UfFYsXElgA";

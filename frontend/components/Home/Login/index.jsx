@@ -30,7 +30,7 @@ const Login= () =>{
     ...trimData(values),
     turnstileToken
 }
-finalObj.turnstileToken = turnstileToken;
+//finalObj.turnstileToken = turnstileToken;
             const httpReq = http()
             const {data} = await httpReq.post("/api/login",finalObj)
             if(data?.isLoged && data?.userType === "admin") {
