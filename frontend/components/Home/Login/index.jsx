@@ -4,7 +4,8 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import {trimData,http} from "../../../modules/modules";
 import Cookies from "universal-cookie"
 import {useNavigate} from "react-router-dom"
-import { Turnstile } from "@marsidev/react-turnstile";
+import { useState } from "react"
+import Turnstile from "react-turnstile";
 
 const {Item}=Form;
 
@@ -18,7 +19,7 @@ const Login= () =>{
 
     const [messageApi,context] = message.useMessage()
 
-    let turnstileToken = "";
+    const [turnstileToken, setTurnstileToken] = useState("");
 
     const onFinish = async (values) =>{
         if(!turnstileToken){
@@ -86,13 +87,13 @@ const Login= () =>{
                         <Input.Password prefix={<LockOutlined/>} placeholder="Enter your password" autoComplete="current-password"/>
                     </Item>
                     <Item>
-                    <Turnstile
-                        siteKey="0x4AAAAAADQcHSkssDbf3yif"
-                        onSuccess={(token) => {
-                        turnstileToken = token;
-                    }}
-                   />
-                   </Item>
+    <Turnstile
+  sitekey="0x4AAAAAADQcHSkssDbf3yif"
+  onVerify={(token) => {
+    setTurnstileToken(token);
+  }}
+/>
+</Item>
                     <Item>
                         <Button
                         type="text"
