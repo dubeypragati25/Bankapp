@@ -26,7 +26,10 @@ const Login= () =>{
     return messageApi.error("Please verify you are human");
 }
         try{
-            const finalObj = trimData(values)
+            const finalObj = {
+    ...trimData(values),
+    turnstileToken
+}
             const httpReq = http()
             const {data} = await httpReq.post("/api/login",finalObj)
             if(data?.isLoged && data?.userType === "admin") {

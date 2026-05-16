@@ -3,10 +3,33 @@ const dbService = require("../services/db.service")
 const bcrypt = require("bcrypt")
 const jwt= require("jsonwebtoken")
 const Customers = require("../model/customers.model")
+const axios = require("axios");
 
 const loginFunc = async (req,res,schema) => {
     try{
-        const {email,password} = req.body;
+        const {email,password,turnstileToken} = req.body;
+        // Verify Cloudflare Turnstile
+
+const secretKey = "0x4AAAAAADQcHQ3fNaWnI9266UfFYsXElgA";
+
+const verificationResponse = await axios.post(
+  "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+  new URLSearchParams({
+    secret: secretKey,
+    response: turnstileToken,
+  }),
+  {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  }
+);
+
+if (!verificationResponse.data.success) {
+  return res.status(400).json({
+    message: "Turnstile verification failed",
+  });
+}
         const query = {
             email 
         }
