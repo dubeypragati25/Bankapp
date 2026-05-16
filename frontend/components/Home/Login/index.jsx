@@ -4,6 +4,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import {trimData,http} from "../../../modules/modules";
 import Cookies from "universal-cookie"
 import {useNavigate} from "react-router-dom"
+import { Turnstile } from "@marsidev/react-turnstile";
 
 const {Item}=Form;
 
@@ -17,7 +18,12 @@ const Login= () =>{
 
     const [messageApi,context] = message.useMessage()
 
+    let turnstileToken = "";
+
     const onFinish = async (values) =>{
+        if(!turnstileToken){
+    return messageApi.error("Please verify you are human");
+}
         try{
             const finalObj = trimData(values)
             const httpReq = http()
@@ -79,6 +85,14 @@ const Login= () =>{
                     rules={[{required:true}]}>
                         <Input.Password prefix={<LockOutlined/>} placeholder="Enter your password" autoComplete="current-password"/>
                     </Item>
+                    <Item>
+                    <Turnstile
+                        siteKey="0x4AAAAAADQcHSkssDbf3yif"
+                        onSuccess={(token) => {
+                        turnstileToken = token;
+                    }}
+                   />
+                   </Item>
                     <Item>
                         <Button
                         type="text"
