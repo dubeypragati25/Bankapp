@@ -1,11 +1,19 @@
 import axios from "axios";
+import Cookies from "universal-cookie";
 
-//http request
-export const http = (accessToken=null) =>{
+const cookies = new Cookies();
+
+// http request
+export const http = () => {
+
+    const accessToken = cookies.get("authToken");
+
     axios.defaults.baseURL = import.meta.env.VITE_BASEURL;
-    if(accessToken) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+
+    if (accessToken) {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     }
+
     return axios;
 }
 
